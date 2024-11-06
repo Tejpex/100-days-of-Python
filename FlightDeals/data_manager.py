@@ -8,7 +8,7 @@ URL = os.getenv("SHEETY_URL")
 
 class DataManager:
     def __init__(self):
-        response = requests.get(URL)
+        response = requests.get(f"{URL}/prices")
         self.data = response.json()["prices"]
         self.cities = [destination["city"] for destination in self.data]
 
@@ -21,5 +21,11 @@ class DataManager:
                     "lowestPrice": self.data[i]["lowestPrice"]
                 }
             }
-            response = requests.put(f"{URL}/{i+2}", json=params)
+            response = requests.put(f"{URL}/prices/{i+2}", json=params)
             print(response.text)
+
+    def get_user_emails(self):
+        response = requests.get(f"{URL}/users")
+        users = response.json()["users"]
+        emails = [user["eMail:"] for user in users if "eMail:" in user]
+        return emails
